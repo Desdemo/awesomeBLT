@@ -1,30 +1,16 @@
 package service
 
-type Base interface {
+type Baser interface {
 	GetID() int64
-	VersionComparison(id int64) bool
+	GetVersion() int64
+	Get(id int64) interface{}
+	VersionComparison(data interface{}) bool
 	IsExists(id int64) bool
+	Inserted(data interface{}) error
+	Deleted(id int64) bool
 }
 
-type Demo struct {
-	Id int64
-}
-
-func (demo *Demo) GetID() int64  {
-	return demo.Id
-}
-
-func (demo *Demo) VersionComparison(id int64) bool  {
-	return false
-}
-
-func (demo *Demo) IsExists(id int64) bool {
-	return false
-}
-
-
-
-func UpdateCheck(base Base) (updated,inserted []int64){
+func UpdateCheck(base Base) (updated, inserted []int64) {
 	if base.IsExists(base.GetID()) {
 		if !base.VersionComparison(base.GetID()) {
 			updated = append(updated, base.GetID())
@@ -32,9 +18,5 @@ func UpdateCheck(base Base) (updated,inserted []int64){
 	} else {
 		inserted = append(inserted, base.GetID())
 	}
-
 	return
 }
-
-
-
